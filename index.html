@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disease Predictor</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url("https://img.freepik.com/free-photo/medical-equipment-with-copy-space_23-2148519736.jpg?t=st=1733492286~exp=1733495886~hmac=aac628041f927d5d01222fae6cbefdd5d345d156d9493c1854fc900d1e3fbaf7&w=1060");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .container {
+            max-width: 600px;
+            margin: 185px auto;
+            background-color: rgba(255, 255, 255, 0.9); /* Slight transparency */
+            border-radius: 10px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 10px;
+        }
+        .header {
+            background-color: #007BFF;
+            color: white;
+            backdrop-filter: blur(20px);
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+        }
+        .logo-container {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000; /* Ensures logo stays on top */
+        }
+        .logo-container img {
+            height: 200px; /* Adjust logo size */
+            width: auto;
+        }
+        
+        .form-container {
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+        .result-container {
+            padding: 20px;
+            background-color: #e9f7ef;
+            border: 1px solid #d4edda;
+            color: #155724;
+            border-radius: 5px;
+            display: none;
+            margin-top: 15px;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+            color: #666;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            Disease & Medication Predictor
+        </div>
+        <div class="form-container">
+            <form id="predict-form">
+                <div class="form-group">
+                    <label for="symptoms">Enter Your Symptoms:</label>
+                    <input type="text" id="symptoms" name="symptoms" placeholder="e.g., skin_rash,itching,back_pain" required>
+                </div>
+                <button type="submit" class="submit-btn">Predict</button>
+            </form>
+            <div id="result" class="result-container">
+                <p><strong>Disease Predicted:</strong> <span id="predicted-disease"></span></p>
+                <p><strong>Suggested Medication:</strong> <span id="suggested-medication"></span></p>
+            </div>
+        </div>
+        <div class="footer">
+            <p>Powered by Your Health Companion</p>
+            <p>Wellness starts here.</p> 
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('predict-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const symptoms = document.getElementById('symptoms').value;
+
+            // Example payload to send to API
+            const data = {
+                symptoms: symptoms.split(',').map(s => s.trim())
+            };
+
+            // Call the back-end API
+            try {
+                const response = await fetch('/predict', { // Use relative path to Flask API
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                // Update the result container
+                document.getElementById('predicted-disease').innerText = result.disease;
+                document.getElementById('suggested-medication').innerText = result.medication;
+                document.getElementById('result').style.display = 'block';
+            } catch (error) {
+                alert('An error occurred while fetching the prediction. Please try again.');
+            }
+        });
+    </script>
+</body>
+<body>
+    <div class="logo-container">
+        <img src="static/Logo1.png" alt="Health Companion Logo">
+    </div>
+</body>
+
+</html>
+
+
+
+
